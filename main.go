@@ -122,6 +122,11 @@ func (gen *Gen) genMethod(funcDecl *ast.FuncDecl) error {
 	firstParam := params[0]
 	firstParamName := firstParam.Names[0]
 	firstParamType := firstParam.Type
+	funcName := funcDecl.Name.String()
+	methodName := funcName
+	if newMethodName, ok := renameMethod[funcName]; ok {
+		methodName = newMethodName
+	}
 	methodDecl := &ast.FuncDecl{
 		Recv: &ast.FieldList{
 			List: []*ast.Field{
@@ -133,7 +138,7 @@ func (gen *Gen) genMethod(funcDecl *ast.FuncDecl) error {
 				},
 			},
 		},
-		Name: ast.NewIdent(funcDecl.Name.String()),
+		Name: ast.NewIdent(methodName),
 		Type: &ast.FuncType{
 			Params: &ast.FieldList{
 				List: funcDecl.Type.Params.List[1:], // skip first parameter (now receiver)
@@ -188,10 +193,31 @@ func (gen *Gen) printMethods() error {
 }
 
 var validMethodTypes = map[string]bool{
-	"*github.com/jupiterrider/purego-sdl3/sdl.Window":   true,
-	"*github.com/jupiterrider/purego-sdl3/sdl.Surface":  true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Renderer": true,
+	"*github.com/jupiterrider/purego-sdl3/sdl.Surface":  true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Texture":  true,
+	"*github.com/jupiterrider/purego-sdl3/sdl.Window":   true,
+}
+
+var renameMethod = map[string]string{
+	// Renderer methods
+	"DestroyRenderer":    "Destroy",
+	"RenderClear":        "Clear",
+	"RenderPresent":      "Present",
+	"SetRenderDrawColor": "SetDrawColor",
+	// Surface methods
+	"BlitSurface":    "Blit",
+	"DestroySurface": "Destroy",
+	"LockSurface":    "Lock",
+	"UnlockSurface":  "Unlock",
+	// Texture methods
+	"DestroyTexture": "Destroy",
+	// Window methods
+	"DestroyWindow":       "Destroy",
+	"GetWindowSurface":    "GetSurface",
+	"HideWindow":          "Hide",
+	"ShowWindow":          "Show",
+	"UpdateWindowSurface": "UpdateSurface",
 }
 
 func (gen *Gen) isValidMethodType(typ types.Type) bool {
