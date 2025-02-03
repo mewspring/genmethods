@@ -1,13 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"go/ast"
 	"go/format"
 	"go/types"
 	"log"
-	"os"
 
 	"github.com/mewpkg/clog"
 	"github.com/pkg/errors"
@@ -127,7 +127,16 @@ func (gen *Gen) genMethod(funcDecl *ast.FuncDecl) error {
 	if newMethodName, ok := renameMethod[funcName]; ok {
 		methodName = newMethodName
 	}
+	doc := &ast.CommentGroup{}
+	for _, comment := range funcDecl.Doc.List {
+		newComment := &ast.Comment{
+			Slash: 0,
+			Text:  comment.Text,
+		}
+		doc.List = append(doc.List, newComment)
+	}
 	methodDecl := &ast.FuncDecl{
+		Doc: doc,
 		Recv: &ast.FieldList{
 			List: []*ast.Field{
 				&ast.Field{
@@ -185,10 +194,16 @@ func (gen *Gen) printMethods() error {
 	for _, method := range gen.methods {
 		file.Decls = append(file.Decls, method)
 	}
-	fmt.Fprintln(os.Stdout, pre)
-	if err := format.Node(os.Stdout, gen.pkg.Fset, file); err != nil {
+	buf := &bytes.Buffer{}
+	fmt.Fprintln(buf, pre)
+	if err := format.Node(buf, gen.pkg.Fset, file); err != nil {
 		return errors.WithStack(err)
 	}
+	data, err := format.Source(buf.Bytes())
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	fmt.Print(string(data))
 	return nil
 }
 
