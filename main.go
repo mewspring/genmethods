@@ -220,6 +220,7 @@ func (gen *Gen) printMethods(output string) error {
 }
 
 var validMethodTypes = map[string]bool{
+	"*github.com/jupiterrider/purego-sdl3/sdl.Camera":   true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Cursor":   true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Renderer": true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Surface":  true,
@@ -228,6 +229,10 @@ var validMethodTypes = map[string]bool{
 }
 
 var renameMethod = map[string]string{
+	// Camera methods
+	"AcquireCameraFrame": "AcquireFrame",
+	"CloseCamera":        "Close",
+	"ReleaseCameraFrame": "ReleaseFrame",
 	// Cursor methods
 	"DestroyCursor": "Destroy",
 	// Renderer methods
