@@ -128,12 +128,14 @@ func (gen *Gen) genMethod(funcDecl *ast.FuncDecl) error {
 		methodName = newMethodName
 	}
 	doc := &ast.CommentGroup{}
-	for _, comment := range funcDecl.Doc.List {
-		newComment := &ast.Comment{
-			Slash: 0,
-			Text:  comment.Text,
+	if funcDecl.Doc != nil {
+		for _, comment := range funcDecl.Doc.List {
+			newComment := &ast.Comment{
+				Slash: 0,
+				Text:  comment.Text,
+			}
+			doc.List = append(doc.List, newComment)
 		}
-		doc.List = append(doc.List, newComment)
 	}
 	methodDecl := &ast.FuncDecl{
 		Doc: doc,
