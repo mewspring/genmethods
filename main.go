@@ -221,10 +221,12 @@ var renameMethod = map[string]string{
 	// Cursor methods
 	"DestroyCursor": "Destroy",
 	// Renderer methods
+	"GetRendererName":    "GetName",
 	"DestroyRenderer":    "Destroy",
 	"RenderClear":        "Clear",
 	"RenderPresent":      "Present",
 	"SetRenderDrawColor": "SetDrawColor",
+	"SetRenderVSync":     "SetVSync",
 	// Surface methods
 	"BlitSurface":    "Blit",
 	"DestroySurface": "Destroy",
@@ -234,8 +236,10 @@ var renameMethod = map[string]string{
 	"DestroyTexture": "Destroy",
 	// Window methods
 	"DestroyWindow":       "Destroy",
+	"GetWindowSize":       "GetSize",
 	"GetWindowSurface":    "GetSurface",
 	"HideWindow":          "Hide",
+	"SetWindowSize":       "SetSize",
 	"ShowWindow":          "Show",
 	"UpdateWindowSurface": "UpdateSurface",
 }
