@@ -210,6 +210,7 @@ func (gen *Gen) printMethods() error {
 }
 
 var validMethodTypes = map[string]bool{
+	"*github.com/jupiterrider/purego-sdl3/sdl.Cursor":   true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Renderer": true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Surface":  true,
 	"*github.com/jupiterrider/purego-sdl3/sdl.Texture":  true,
@@ -217,6 +218,8 @@ var validMethodTypes = map[string]bool{
 }
 
 var renameMethod = map[string]string{
+	// Cursor methods
+	"DestroyCursor": "Destroy",
 	// Renderer methods
 	"DestroyRenderer":    "Destroy",
 	"RenderClear":        "Clear",
